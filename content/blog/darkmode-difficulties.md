@@ -1,5 +1,5 @@
 +++
-    "Title": "Dark mode difficulties"
+    "Title": "Dark mode difficulties",
     "Date": "2024-5-24"
 +++
 It's no secret, designing this website gave me many grievances
