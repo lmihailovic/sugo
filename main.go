@@ -5,19 +5,20 @@ import (
 	"text/template"
 )
 
-type Inventory struct {
-	Material string
-	Count    uint
+type Blogpost struct {
+	Title   string
+	Content []string
 }
 
 func main() {
-	sweaters := Inventory{"wool", 17}
-	tmpl, err := template.New("test").Parse("{{.Count}} items are made of {{.Material}}")
+	tmpl, err := template.ParseFiles("templates/blogpost.html")
 	if err != nil {
 		panic(err)
 	}
 
-	err = tmpl.Execute(os.Stdout, sweaters)
+	blogpost := Blogpost{"Prvi clanak", []string{"lorem ipsum", "dolor sit amet"}}
+
+	err = tmpl.Execute(os.Stdout, blogpost)
 	if err != nil {
 		panic(err)
 	}
