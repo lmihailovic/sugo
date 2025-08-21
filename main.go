@@ -5,9 +5,11 @@ import (
 	"encoding/json"
 	"errors"
 	"flag"
+	"fmt"
+	"io/fs"
+	"log"
 	"os"
 	"path/filepath"
-	"slices"
 	"strings"
 	"text/template"
 
@@ -81,14 +83,14 @@ func GenerateHtmlFile(templateFilePath string, contentFilePath string, destinati
 
 	htmlContent := Webpage{frontMatter["Title"], buf.String()}
 
-	contentFileParentDirs := strings.Split(contentFilePath, "/")
-	contentFileName := contentFileParentDirs[len(contentFileParentDirs)-1]
-	baseName := strings.TrimSuffix(contentFileName, filepath.Ext(contentFileName))
-	htmlFileName := baseName + ".html"
+	_, baseName := filepath.Split(contentFilePath)
+	htmlFileName := strings.TrimSuffix(baseName, filepath.Ext(baseName)) + ".html"
 
-	destinationPath := ""
-	for i := slices.Index(contentFileParentDirs, "content") + 1; i < len(contentFileParentDirs)-1; i++ {
-		destinationPath = filepath.Join(destinationPath, contentFileParentDirs[i])
+	contentRoot := "content"
+
+	destinationPath, err := filepath.Rel(contentRoot, contentFilePath)
+	if err != nil {
+		panic(err)
 	}
 
 	fullDestinationPath := filepath.Join(destinationRootPath, destinationPath)
@@ -112,17 +114,39 @@ func GenerateHtmlFile(templateFilePath string, contentFilePath string, destinati
 	return true, nil
 }
 
-// For each file in content, find the template with the same name and apply it.
+func ListFiles(dir string) []string {
+	var files []string
+
+	err := filepath.WalkDir(dir, func(path string, d fs.DirEntry, err error) error {
+		if !d.IsDir() && filepath.Ext(path) == ".md" {
+			files = append(files, path)
+		}
+		return nil
+	})
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	return files
+}
 
 func main() {
 	sitePath := flag.String("p", ".", "path to website directory")
-	outputRootPath := flag.String("o", *sitePath+"/website", "path for generated static web files")
+	outputRootPath := flag.String("o", filepath.Join(*sitePath, "website"), "path for generated static web files")
 
 	flag.Parse()
 
-	contentPath := *sitePath + "/content"
+	contentPath := filepath.Join(*sitePath, "content")
+	templatesPath := filepath.Join(*sitePath, "templates")
 
-	_, err := GenerateHtmlFile("templates/blog.html", contentPath+"/blog/darkmode-difficulties.md", *outputRootPath)
+	files := ListFiles(contentPath)
+
+	for _, filename := range files {
+
+		fmt.Println(filename)
+	}
+
+	_, err := GenerateHtmlFile(templatesPath+"/blog/single.html", contentPath+"/blog/darkmode-difficulties.md", *outputRootPath)
 	if err != nil {
 		panic(err)
 	}
