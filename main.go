@@ -5,7 +5,6 @@ import (
 	"encoding/json"
 	"errors"
 	"flag"
-	"fmt"
 	"io/fs"
 	"log"
 	"os"
@@ -57,20 +56,20 @@ func GetFrontMatter(filePath string, delimiter string) (map[string]string, int, 
 }
 
 // Writes the HTML to specified destination using the provided template and content.
-func GenerateHtmlFile(templateFilePath string, contentFilePath string, destinationRootPath string) (bool, error) {
+func GenerateHtmlFile(templateFilePath string, contentFilePath string, destinationRootPath string) error {
 	tmpl, err := template.ParseFiles(templateFilePath)
 	if err != nil {
-		return false, err
+		return err
 	}
 
 	frontMatter, fmEndIndex, err := GetFrontMatter(contentFilePath, "+++")
 	if err != nil {
-		return false, err
+		return err
 	}
 
 	fileBytes, err := os.ReadFile(contentFilePath)
 	if err != nil {
-		return false, err
+		return err
 	}
 
 	fileContent := string(fileBytes)[fmEndIndex:]
@@ -78,7 +77,7 @@ func GenerateHtmlFile(templateFilePath string, contentFilePath string, destinati
 
 	err = goldmark.Convert([]byte(fileContent), &buf)
 	if err != nil {
-		return false, err
+		return err
 	}
 
 	htmlContent := Webpage{frontMatter["Title"], buf.String()}
@@ -90,7 +89,7 @@ func GenerateHtmlFile(templateFilePath string, contentFilePath string, destinati
 
 	destinationPath, err := filepath.Rel(contentRoot, contentFilePath)
 	if err != nil {
-		panic(err)
+		return err
 	}
 
 	destinationSubDir, _ := filepath.Split(destinationPath)
@@ -99,21 +98,21 @@ func GenerateHtmlFile(templateFilePath string, contentFilePath string, destinati
 
 	err = os.MkdirAll(fullDestinationPath, os.ModePerm)
 	if err != nil {
-		return false, err
+		return err
 	}
 
 	outputFile, err := os.Create(filepath.Join(fullDestinationPath, htmlFileName))
 	if err != nil {
-		return false, err
+		return err
 	}
 	defer outputFile.Close()
 
 	err = tmpl.Execute(outputFile, htmlContent)
 	if err != nil {
-		return false, err
+		return err
 	}
 
-	return true, nil
+	return nil
 }
 
 func ListFiles(dir string) []string {
@@ -139,17 +138,32 @@ func main() {
 	flag.Parse()
 
 	contentPath := filepath.Join(*sitePath, "content")
-	templatesPath := filepath.Join(*sitePath, "templates")
 
 	files := ListFiles(contentPath)
 
 	for _, filename := range files {
+		filenameParentDir, _ := filepath.Split(filename)
+		templatePath, err := filepath.Rel("content", filenameParentDir)
+		if err != nil {
+			panic(err)
+		}
 
-		fmt.Println(filename)
-	}
+		if strings.HasSuffix(filename, "index.md") {
+			templateFullPath := filepath.Join("templates", templatePath, "section.html")
 
-	_, err := GenerateHtmlFile(templatesPath+"/blog/single.html", contentPath+"/blog/darkmode-difficulties.md", *outputRootPath)
-	if err != nil {
-		panic(err)
+			log.Println("Reached file: " + filename)
+			err := GenerateHtmlFile(templateFullPath, filename, *outputRootPath)
+			if err != nil {
+				panic(err)
+			}
+		} else {
+			templateFullPath := filepath.Join("templates", templatePath, "single.html")
+
+			log.Println("Reached file: " + filename)
+			err := GenerateHtmlFile(templateFullPath, filename, *outputRootPath)
+			if err != nil {
+				panic(err)
+			}
+		}
 	}
 }
