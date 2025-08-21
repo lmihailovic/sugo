@@ -115,19 +115,14 @@ func GenerateHtmlFile(templateFilePath string, contentFilePath string, destinati
 // For each file in content, find the template with the same name and apply it.
 
 func main() {
-	wd, err := os.Getwd()
-	if err != nil {
-		panic(err)
-	}
-
-	sitePath := flag.String("p", wd, "path to website directory")
+	sitePath := flag.String("p", ".", "path to website directory")
 	outputRootPath := flag.String("o", *sitePath+"/website", "path for outputted static web files")
 
 	flag.Parse()
 
 	contentPath := *sitePath + "/content"
 
-	_, err = GenerateHtmlFile("templates/blog.html", contentPath+"/blog/darkmode-difficulties.md", *outputRootPath)
+	_, err := GenerateHtmlFile("templates/blog.html", contentPath+"/blog/darkmode-difficulties.md", *outputRootPath)
 	if err != nil {
 		panic(err)
 	}
