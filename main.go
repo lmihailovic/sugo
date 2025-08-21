@@ -93,7 +93,11 @@ func GenerateHtmlFile(templateFilePath string, contentFilePath string, destinati
 		panic(err)
 	}
 
-	fullDestinationPath := filepath.Join(destinationRootPath, destinationPath)
+	destinationSubDir, _ := filepath.Split(destinationPath)
+
+	fullDestinationPath := filepath.Join(destinationRootPath, destinationSubDir)
+
+	fmt.Printf("\nDest Path: %v\nDest root: %v\nFull dest: %v", destinationPath, destinationRootPath, fullDestinationPath)
 
 	err = os.MkdirAll(fullDestinationPath, os.ModePerm)
 	if err != nil {
