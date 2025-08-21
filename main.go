@@ -6,6 +6,8 @@ import (
 	"errors"
 	"flag"
 	"os"
+	"path/filepath"
+	"slices"
 	"strings"
 	"text/template"
 
@@ -53,47 +55,80 @@ func GetFrontMatter(filePath string, delimiter string) (map[string]string, int, 
 }
 
 // Writes the HTML to specified destination using the provided template and content.
-func GenerateHtmlFile(templateFilePath string, contentFilePath string, destinationPath string) {
+func GenerateHtmlFile(templateFilePath string, contentFilePath string, destinationRootPath string) (bool, error) {
 	tmpl, err := template.ParseFiles(templateFilePath)
 	if err != nil {
-		panic(err)
+		return false, err
 	}
 
 	frontMatter, fmEndIndex, err := GetFrontMatter(contentFilePath, "+++")
 	if err != nil {
-		panic(err)
+		return false, err
 	}
-
-	var buf bytes.Buffer
 
 	fileBytes, err := os.ReadFile(contentFilePath)
 	if err != nil {
-		panic(err)
+		return false, err
 	}
 
 	fileContent := string(fileBytes)[fmEndIndex:]
+	var buf bytes.Buffer
 
 	err = goldmark.Convert([]byte(fileContent), &buf)
 	if err != nil {
-		panic(err)
+		return false, err
 	}
 
 	htmlContent := Webpage{frontMatter["Title"], buf.String()}
 
-	err = tmpl.Execute(os.Stdout, htmlContent)
-	if err != nil {
-		panic(err)
+	contentFileParentDirs := strings.Split(contentFilePath, "/")
+	contentFileName := contentFileParentDirs[len(contentFileParentDirs)-1]
+	baseName := strings.TrimSuffix(contentFileName, filepath.Ext(contentFileName))
+	htmlFileName := baseName + ".html"
+
+	destinationPath := ""
+	for i := slices.Index(contentFileParentDirs, "content") + 1; i < len(contentFileParentDirs)-1; i++ {
+		destinationPath = filepath.Join(destinationPath, contentFileParentDirs[i])
 	}
+
+	fullDestinationPath := filepath.Join(destinationRootPath, destinationPath)
+
+	err = os.MkdirAll(fullDestinationPath, os.ModePerm)
+	if err != nil {
+		return false, err
+	}
+
+	outputFile, err := os.Create(filepath.Join(fullDestinationPath, htmlFileName))
+	if err != nil {
+		return false, err
+	}
+	defer outputFile.Close()
+
+	err = tmpl.Execute(outputFile, htmlContent)
+	if err != nil {
+		return false, err
+	}
+
+	return true, nil
 }
 
 // For each file in content, find the template with the same name and apply it.
 
 func main() {
-	sitePath := flag.String("p", ".", "path to website directory")
+	wd, err := os.Getwd()
+	if err != nil {
+		panic(err)
+	}
+
+	sitePath := flag.String("p", wd, "path to website directory")
+	outputRootPath := flag.String("o", *sitePath+"/website", "path for outputted static web files")
 
 	flag.Parse()
 
 	contentPath := *sitePath + "/content"
 
-	GenerateHtmlFile("templates/blog.html", contentPath+"/blog/smth.md", *sitePath+"/website")
+	_, err = GenerateHtmlFile("templates/blog.html", contentPath+"/blog/darkmode-difficulties.md", *outputRootPath)
+	if err != nil {
+		panic(err)
+	}
 }
