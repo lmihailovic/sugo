@@ -116,7 +116,7 @@ func GenerateHtmlFile(templateFilePath string, contentFilePath string, destinati
 
 func main() {
 	sitePath := flag.String("p", ".", "path to website directory")
-	outputRootPath := flag.String("o", *sitePath+"/website", "path for outputted static web files")
+	outputRootPath := flag.String("o", *sitePath+"/website", "path for generated static web files")
 
 	flag.Parse()
 
