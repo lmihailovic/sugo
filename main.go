@@ -115,6 +115,7 @@ func GenerateHtmlFile(templateFilePath string, contentFilePath string, destinati
 	return nil
 }
 
+// Returns all files inside of directory recursively.
 func ListFiles(dir string) []string {
 	var files []string
 
