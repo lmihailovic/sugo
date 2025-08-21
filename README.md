@@ -23,7 +23,7 @@ content
 │   └── lorem.md
 └── hobbies
     └── films
-        └── _index.md
+        └── index.md
 ```
 
 Given the example above, path `example.com/blog` will use the `section.html`
@@ -34,4 +34,6 @@ template, and `example.com/blog/lorem.html` will use `single.html`.
 - [ ] Specify custom templates in front matter (so content's template doesn't
 necessarily depend on the type (subdir) to which the content belongs to,
 e.g `blog/`, `hobbies/`, `project/`...)
-- [ ] Implement `_index.md` templates which represent the index of the given subdir
+- [x] Implement `index.md` templates which represent the index of the given subdir
+- [ ] Implement special `home` templates for the website's main index page
+- [ ] Implement nested templates (for the document head, header, footer...)
