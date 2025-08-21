@@ -14,3 +14,4 @@ open-source and available to the public.
 - [ ] Specify custom templates in front matter (so content's template doesn't
 necessarily depend on the type (subdir) to which the content belongs to,
 e.g `blog/`, `hobbies/`, `project/`...)
+- [ ] Implement `_index.md` templates which represent the index of the given subdir
