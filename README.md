@@ -38,3 +38,4 @@ e.g `blog/`, `hobbies/`, `project/`...)
 - [x] Implement special `home` templates for the website's main index page -
 implemented by placing an `index.md` in content root and a `section.html` in template root
 - [ ] Implement nested templates (for the document head, header, footer...)
+- [ ] Allow for specification of custom content front matter delimiters
