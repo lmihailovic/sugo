@@ -35,5 +35,6 @@ template, and `example.com/blog/lorem.html` will use `single.html`.
 necessarily depend on the type (subdir) to which the content belongs to,
 e.g `blog/`, `hobbies/`, `project/`...)
 - [x] Implement `index.md` templates which represent the index of the given subdir
-- [ ] Implement special `home` templates for the website's main index page
+- [x] Implement special `home` templates for the website's main index page -
+implemented by placing an `index.md` in content root and a `section.html` in template root
 - [ ] Implement nested templates (for the document head, header, footer...)
