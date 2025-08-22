@@ -5,7 +5,6 @@ import (
 	"encoding/json"
 	"errors"
 	"flag"
-	"fmt"
 	"io/fs"
 	"log"
 	"os"
@@ -168,12 +167,10 @@ func main() {
 		}
 		var customTemplPath string
 		if customTempl != nil {
-			fmt.Printf("\nCustom template specified: %v\n", customTempl)
 			customTemplPath = filepath.Join("custom", customTempl.(string))
 		}
 
 		if strings.HasSuffix(filename, "index.md") {
-
 			templateFullPath := ""
 			if customTempl != nil {
 				templateFullPath = filepath.Join("templates", customTemplPath)
@@ -181,7 +178,6 @@ func main() {
 				templateFullPath = filepath.Join("templates", templPath, "section.html")
 			}
 
-			// log.Println("Reached file: " + filename)
 			err := GenerateHtmlFile(templateFullPath, filename, *outputRootPath)
 			if err != nil {
 				panic(err)
@@ -194,7 +190,6 @@ func main() {
 				templateFullPath = filepath.Join("templates", templPath, "single.html")
 			}
 
-			// log.Println("Reached file: " + filename)
 			err := GenerateHtmlFile(templateFullPath, filename, *outputRootPath)
 			if err != nil {
 				panic(err)
