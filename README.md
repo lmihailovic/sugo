@@ -31,7 +31,7 @@ template, and `example.com/blog/lorem.html` will use `single.html`.
 
 ## To do
 - [x] Dynamic front matter entries (ditch the current temporary struct solution)
-- [ ] Specify custom templates in front matter (so content's template doesn't
+- [x] Specify custom templates in front matter (so content's template doesn't
 necessarily depend on the type (subdir) to which the content belongs to,
 e.g `blog/`, `hobbies/`, `project/`...)
 - [x] Implement `index.md` templates which represent the index of the given subdir
