@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"errors"
 	"flag"
+	"fmt"
 	"io/fs"
 	"log"
 	"os"
@@ -14,11 +15,6 @@ import (
 
 	"github.com/yuin/goldmark"
 )
-
-type Webpage struct {
-	Title   string
-	Content string
-}
 
 // Extracts the json formatted front matter from a content file. Returns
 // the front matter of said file and the index at which Markdown content starts.
@@ -42,7 +38,7 @@ func GetFrontMatter(filePath string, delimiter string) (map[string]string, int, 
 	frontMatter := "{" + fileContent[startIndex:endIndex] + "}\n"
 
 	if !json.Valid([]byte(frontMatter)) {
-		return nil, -1, errors.New("invalid json in front matter")
+		return nil, -1, errors.New("invalid json in front matter: " + frontMatter)
 	}
 
 	data := make(map[string]string, 0)
@@ -50,6 +46,10 @@ func GetFrontMatter(filePath string, delimiter string) (map[string]string, int, 
 	err = json.Unmarshal([]byte(frontMatter), &data)
 	if err != nil {
 		return nil, endIndex + len(delimiter), err
+	}
+
+	for k, v := range data {
+		fmt.Printf("\nk: %v\tv: %v\n", k, v)
 	}
 
 	return data, endIndex + len(delimiter), nil
@@ -80,7 +80,8 @@ func GenerateHtmlFile(templateFilePath string, contentFilePath string, destinati
 		return err
 	}
 
-	htmlContent := Webpage{frontMatter["Title"], buf.String()}
+	pageData := frontMatter
+	pageData["Content"] = buf.String()
 
 	_, baseName := filepath.Split(contentFilePath)
 	htmlFileName := strings.TrimSuffix(baseName, filepath.Ext(baseName)) + ".html"
@@ -107,7 +108,7 @@ func GenerateHtmlFile(templateFilePath string, contentFilePath string, destinati
 	}
 	defer outputFile.Close()
 
-	err = tmpl.Execute(outputFile, htmlContent)
+	err = tmpl.Execute(outputFile, pageData)
 	if err != nil {
 		return err
 	}
