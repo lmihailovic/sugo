@@ -145,7 +145,7 @@ func ListFiles(dir string) []string {
 }
 
 func main() {
-	sitePath := flag.String("p", ".", "path to website directory")
+	sitePath := flag.String("i", ".", "path to website directory")
 	outputRootPath := flag.String("o", filepath.Join(*sitePath, "website"), "path for generated static web files")
 
 	flag.Parse()
