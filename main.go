@@ -5,7 +5,6 @@ import (
 	"encoding/json"
 	"errors"
 	"flag"
-	"fmt"
 	"io/fs"
 	"log"
 	"os"
@@ -18,7 +17,7 @@ import (
 
 // Extracts the json formatted front matter from a content file. Returns
 // the front matter of said file and the index at which Markdown content starts.
-func GetFrontMatter(filePath string, delimiter string) (map[string]string, int, error) {
+func GetFrontMatter(filePath string, delimiter string) (map[string]any, int, error) {
 	fileBytes, err := os.ReadFile(filePath)
 	if err != nil {
 		return nil, -1, err
@@ -41,16 +40,16 @@ func GetFrontMatter(filePath string, delimiter string) (map[string]string, int, 
 		return nil, -1, errors.New("invalid json in front matter: " + frontMatter)
 	}
 
-	data := make(map[string]string, 0)
+	data := make(map[string]any, 0)
 
 	err = json.Unmarshal([]byte(frontMatter), &data)
 	if err != nil {
 		return nil, endIndex + len(delimiter), err
 	}
 
-	for k, v := range data {
-		fmt.Printf("\nk: %v\tv: %v\n", k, v)
-	}
+	// for k, v := range data {
+	// 	fmt.Printf("\nk: %v\tv: %v\n", k, v)
+	// }
 
 	return data, endIndex + len(delimiter), nil
 }
@@ -153,7 +152,7 @@ func main() {
 		if strings.HasSuffix(filename, "index.md") {
 			templateFullPath := filepath.Join("templates", templatePath, "section.html")
 
-			log.Println("Reached file: " + filename)
+			// log.Println("Reached file: " + filename)
 			err := GenerateHtmlFile(templateFullPath, filename, *outputRootPath)
 			if err != nil {
 				panic(err)
@@ -161,7 +160,7 @@ func main() {
 		} else {
 			templateFullPath := filepath.Join("templates", templatePath, "single.html")
 
-			log.Println("Reached file: " + filename)
+			// log.Println("Reached file: " + filename)
 			err := GenerateHtmlFile(templateFullPath, filename, *outputRootPath)
 			if err != nil {
 				panic(err)
