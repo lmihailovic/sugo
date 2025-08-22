@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"errors"
 	"flag"
+	"fmt"
 	"io/fs"
 	"log"
 	"os"
@@ -52,6 +53,16 @@ func GetFrontMatter(filePath string, delimiter string) (map[string]any, int, err
 	// }
 
 	return data, endIndex + len(delimiter), nil
+}
+
+func GetSpecificFrontMatter(filePath string, delimiter string, target string) (any, error) {
+	frontMatter, _, err := GetFrontMatter(filePath, delimiter)
+	if err != nil {
+		return nil, err
+	}
+
+	targetData := frontMatter[target]
+	return targetData, nil
 }
 
 // Writes the HTML to specified destination using the provided template and content.
@@ -143,14 +154,31 @@ func main() {
 	files := ListFiles(contentPath)
 
 	for _, filename := range files {
+
 		filenameParentDir, _ := filepath.Split(filename)
-		templatePath, err := filepath.Rel("content", filenameParentDir)
+		templPath, err := filepath.Rel("content", filenameParentDir)
 		if err != nil {
 			panic(err)
 		}
 
+		customTempl, err := GetSpecificFrontMatter(filename, "+++", "Template")
+		if err != nil {
+			panic(err)
+		}
+		var customTemplPath string
+		if customTempl != nil {
+			fmt.Printf("\nCustom template specified: %v\n", customTempl)
+			customTemplPath = filepath.Join("custom", customTempl.(string))
+		}
+
 		if strings.HasSuffix(filename, "index.md") {
-			templateFullPath := filepath.Join("templates", templatePath, "section.html")
+
+			templateFullPath := ""
+			if customTempl != nil {
+				templateFullPath = filepath.Join("templates", customTemplPath)
+			} else {
+				templateFullPath = filepath.Join("templates", templPath, "section.html")
+			}
 
 			// log.Println("Reached file: " + filename)
 			err := GenerateHtmlFile(templateFullPath, filename, *outputRootPath)
@@ -158,7 +186,12 @@ func main() {
 				panic(err)
 			}
 		} else {
-			templateFullPath := filepath.Join("templates", templatePath, "single.html")
+			templateFullPath := ""
+			if customTempl != nil {
+				templateFullPath = filepath.Join("templates", customTemplPath)
+			} else {
+				templateFullPath = filepath.Join("templates", templPath, "single.html")
+			}
 
 			// log.Println("Reached file: " + filename)
 			err := GenerateHtmlFile(templateFullPath, filename, *outputRootPath)
