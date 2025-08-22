@@ -55,6 +55,7 @@ func GetFrontMatter(filePath string, delimiter string) (map[string]any, int, err
 	return data, endIndex + len(delimiter), nil
 }
 
+// Returns the value of target front matter map key
 func GetSpecificFrontMatter(filePath string, delimiter string, target string) (any, error) {
 	frontMatter, _, err := GetFrontMatter(filePath, delimiter)
 	if err != nil {
