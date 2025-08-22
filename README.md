@@ -30,7 +30,7 @@ Given the example above, path `example.com/blog` will use the `section.html`
 template, and `example.com/blog/lorem.html` will use `single.html`.
 
 ## To do
-- [ ] Dynamic front matter entries (ditch the current temporary struct solution)
+- [x] Dynamic front matter entries (ditch the current temporary struct solution)
 - [ ] Specify custom templates in front matter (so content's template doesn't
 necessarily depend on the type (subdir) to which the content belongs to,
 e.g `blog/`, `hobbies/`, `project/`...)
