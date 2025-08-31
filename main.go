@@ -155,8 +155,8 @@ func main() {
 
 	for _, filename := range files {
 
-		filenameParentDir, _ := filepath.Split(filename)
-		templPath, err := filepath.Rel("content", filenameParentDir)
+		filenameParentDirs, _ := filepath.Split(filename)
+		templPath, err := filepath.Rel("content", filenameParentDirs)
 		if err != nil {
 			panic(err)
 		}
@@ -170,30 +170,25 @@ func main() {
 			customTemplPath = filepath.Join("custom", customTempl.(string))
 		}
 
+		templateFullPath := ""
+
 		if strings.HasSuffix(filename, "index.md") {
-			templateFullPath := ""
 			if customTempl != nil {
 				templateFullPath = filepath.Join("templates", customTemplPath)
 			} else {
 				templateFullPath = filepath.Join("templates", templPath, "section.html")
 			}
-
-			err := GenerateHtmlFile(templateFullPath, filename, *outputRootPath)
-			if err != nil {
-				panic(err)
-			}
 		} else {
-			templateFullPath := ""
 			if customTempl != nil {
 				templateFullPath = filepath.Join("templates", customTemplPath)
 			} else {
 				templateFullPath = filepath.Join("templates", templPath, "single.html")
 			}
+		}
 
-			err := GenerateHtmlFile(templateFullPath, filename, *outputRootPath)
-			if err != nil {
-				panic(err)
-			}
+		err = GenerateHtmlFile(templateFullPath, filename, *outputRootPath)
+		if err != nil {
+			panic(err)
 		}
 	}
 }
