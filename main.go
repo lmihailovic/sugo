@@ -165,25 +165,25 @@ func main() {
 		if err != nil {
 			panic(err)
 		}
-		var customTemplPath string
+
 		if customTempl != nil {
-			customTemplPath = filepath.Join("custom", customTempl.(string))
+			customTemplPath := filepath.Join("custom", customTempl.(string))
+			templateFullPath := filepath.Join("templates", customTemplPath)
+
+			err = GenerateHtmlFile(templateFullPath, filename, *outputRootPath)
+			if err != nil {
+				panic(err)
+			}
+
+			continue
 		}
 
 		templateFullPath := ""
 
 		if strings.HasSuffix(filename, "index.md") {
-			if customTempl != nil {
-				templateFullPath = filepath.Join("templates", customTemplPath)
-			} else {
-				templateFullPath = filepath.Join("templates", templPath, "section.html")
-			}
+			templateFullPath = filepath.Join("templates", templPath, "section.html")
 		} else {
-			if customTempl != nil {
-				templateFullPath = filepath.Join("templates", customTemplPath)
-			} else {
-				templateFullPath = filepath.Join("templates", templPath, "single.html")
-			}
+			templateFullPath = filepath.Join("templates", templPath, "single.html")
 		}
 
 		err = GenerateHtmlFile(templateFullPath, filename, *outputRootPath)
