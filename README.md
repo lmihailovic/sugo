@@ -47,6 +47,9 @@ e.g `blog/`, `hobbies/`, `project/`...)
 - [x] Implement `index.md` templates which represent the index of the given subdir
 - [x] Implement special `home` templates for the website's main index page -
 implemented by placing an `index.md` in `content/` root and a `section.html` in
-`template/` root
+`template/` root\
+- [x] Allow for specification of custom content front matter delimiters
+- [ ] Add `static/` dir functionality for css, js and image files.
 - [ ] Implement nested templates (for the document head, header, footer...)
-- [ ] Allow for specification of custom content front matter delimiters
+- [ ] Add `.Path` property for pages to allow for nav element creations
+- [ ] Add ability to loop over pages in content sections inside of templates
