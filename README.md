@@ -20,14 +20,24 @@ Here is an example of a typical `content/` directory:
 content
 ├── blog
 │   ├── darkmode-difficulties.md
-│   └── lorem.md
+│   ├── lorem.md
+│   └── index.md
 └── hobbies
+    ├── index.md
     └── films
         └── index.md
 ```
 
 Given the example above, path `example.com/blog` will use the `section.html`
 template, and `example.com/blog/lorem.html` will use `single.html`.
+
+## Arguments
+```
+ -i string
+        path to website directory (default ".")
+ -o string
+        path for generated static web files (default "website")
+```
 
 ## To do
 - [x] Dynamic front matter entries (ditch the current temporary struct solution)
