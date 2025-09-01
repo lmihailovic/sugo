@@ -143,7 +143,10 @@ func ListFiles(dir string) []string {
 	return files
 }
 
-func CopyStaticFolder(src string, dst string) error {
+// CopyStaticDir copies all files from the source directory to the destination directory.
+// src specifies the source directory containing the files to be copied.
+// dst specifies the destination directory where the files will be placed.
+func CopyStaticDir(src string, dst string) error {
 	destFS := os.DirFS(src)
 
 	err := os.CopyFS(dst, destFS)
@@ -203,7 +206,7 @@ func main() {
 		}
 	}
 
-	err := CopyStaticFolder(staticPath, *outputRootPath)
+	err := CopyStaticDir(staticPath, *outputRootPath)
 	if err != nil {
 		panic(err)
 	}
