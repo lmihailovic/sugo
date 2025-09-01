@@ -143,6 +143,16 @@ func ListFiles(dir string) []string {
 	return files
 }
 
+func CopyStaticFolder(src string, dst string) error {
+	destFS := os.DirFS(src)
+
+	err := os.CopyFS(dst, destFS)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
 func main() {
 	sitePath := flag.String("i", ".", "path to website directory")
 	outputRootPath := flag.String("o", filepath.Join(*sitePath, "website"), "path for generated static web files")
@@ -150,6 +160,7 @@ func main() {
 	flag.Parse()
 
 	contentPath := filepath.Join(*sitePath, "content")
+	staticPath := filepath.Join(*sitePath, "static")
 
 	files := ListFiles(contentPath)
 
@@ -191,4 +202,10 @@ func main() {
 			panic(err)
 		}
 	}
+
+	err := CopyStaticFolder(staticPath, *outputRootPath)
+	if err != nil {
+		panic(err)
+	}
+
 }
