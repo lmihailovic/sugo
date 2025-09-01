@@ -15,7 +15,7 @@ import (
 	"github.com/yuin/goldmark"
 )
 
-// Extracts the json formatted front matter from a content file. Returns
+// GetFrontMatter extracts the json formatted front matter from a content file. Returns
 // the front matter of said file and the index at which Markdown content starts.
 func GetFrontMatter(filePath string, delimiter string) (map[string]any, int, error) {
 	fileBytes, err := os.ReadFile(filePath)
@@ -54,7 +54,7 @@ func GetFrontMatter(filePath string, delimiter string) (map[string]any, int, err
 	return data, endIndex + len(delimiter), nil
 }
 
-// Returns the value of targeted key in front matter map.
+// GetSpecificFrontMatter returns the value of targeted key in front matter map.
 func GetSpecificFrontMatter(filePath string, delimiter string, target string) (any, error) {
 	frontMatter, _, err := GetFrontMatter(filePath, delimiter)
 	if err != nil {
@@ -65,68 +65,25 @@ func GetSpecificFrontMatter(filePath string, delimiter string, target string) (a
 	return targetData, nil
 }
 
-// Writes the HTML to specified destination using the provided template and content.
-func GenerateHtmlFile(templateFilePath string, contentFilePath string, destinationRootPath string) error {
-	tmpl, err := template.ParseFiles(templateFilePath)
+// GetTextContent reads a Markdown file, processes its content from a given offset, and converts it to HTML text.
+func GetTextContent(filePath string, offset int) (string, error) {
+	fileBytes, err := os.ReadFile(filePath)
 	if err != nil {
-		return err
+		return "", err
 	}
 
-	frontMatter, fmEndIndex, err := GetFrontMatter(contentFilePath, "+++")
-	if err != nil {
-		return err
-	}
-
-	fileBytes, err := os.ReadFile(contentFilePath)
-	if err != nil {
-		return err
-	}
-
-	fileContent := string(fileBytes)[fmEndIndex:]
+	fileContent := string(fileBytes)[offset:]
 	var buf bytes.Buffer
 
 	err = goldmark.Convert([]byte(fileContent), &buf)
 	if err != nil {
-		return err
+		return "", err
 	}
 
-	pageData := frontMatter
-	pageData["Content"] = buf.String()
-
-	_, baseName := filepath.Split(contentFilePath)
-	htmlFileName := strings.TrimSuffix(baseName, filepath.Ext(baseName)) + ".html"
-
-	contentRoot := "content"
-
-	destinationPath, err := filepath.Rel(contentRoot, contentFilePath)
-	if err != nil {
-		return err
-	}
-
-	destinationSubDir, _ := filepath.Split(destinationPath)
-
-	fullDestinationPath := filepath.Join(destinationRootPath, destinationSubDir)
-
-	err = os.MkdirAll(fullDestinationPath, os.ModePerm)
-	if err != nil {
-		return err
-	}
-
-	outputFile, err := os.Create(filepath.Join(fullDestinationPath, htmlFileName))
-	if err != nil {
-		return err
-	}
-	defer outputFile.Close()
-
-	err = tmpl.Execute(outputFile, pageData)
-	if err != nil {
-		return err
-	}
-
-	return nil
+	return buf.String(), nil
 }
 
-// Returns all files inside of directory recursively.
+// ListFiles returns all files inside of directory recursively.
 func ListFiles(dir string) []string {
 	var files []string
 
@@ -167,42 +124,59 @@ func main() {
 
 	files := ListFiles(contentPath)
 
-	for _, filename := range files {
+	for _, file := range files {
+		println(file)
+		relPath, err := filepath.Rel(contentPath, file)
+		if err != nil {
+			panic(err)
+		}
+		relPathDirs, fileName := filepath.Split(relPath)
+		baseFileName := strings.TrimSuffix(fileName, filepath.Ext(fileName))
 
-		filenameParentDirs, _ := filepath.Split(filename)
-		templPath, err := filepath.Rel("content", filenameParentDirs)
+		templFile := "single.gohtml"
+		if baseFileName == "index" {
+			templFile = "section.gohtml"
+		}
+
+		println("templPath: " + relPathDirs)
+		println("filename: " + templFile + "\n")
+
+		tmpl := template.Must(template.New("").ParseFiles(
+			"templates/_layouts/base.gohtml",
+			"templates/_layouts/head.gohtml",
+			"templates/_layouts/header.gohtml",
+			"templates/_layouts/footer.gohtml",
+			filepath.Join("templates", relPathDirs, templFile), // specific page
+		))
+
+		frontmatter, offset, err := GetFrontMatter(file, "+++")
 		if err != nil {
 			panic(err)
 		}
 
-		customTempl, err := GetSpecificFrontMatter(filename, "+++", "Template")
+		pageData := frontmatter
+		pageData["Content"], err = GetTextContent(file, offset)
 		if err != nil {
 			panic(err)
 		}
 
-		if customTempl != nil {
-			customTemplPath := filepath.Join("custom", customTempl.(string))
-			templateFullPath := filepath.Join("templates", customTemplPath)
+		htmlFileName := baseFileName + ".html"
 
-			err = GenerateHtmlFile(templateFullPath, filename, *outputRootPath)
-			if err != nil {
-				panic(err)
-			}
-
-			continue
-		}
-
-		templateFullPath := ""
-
-		if strings.HasSuffix(filename, "index.md") {
-			templateFullPath = filepath.Join("templates", templPath, "section.html")
-		} else {
-			templateFullPath = filepath.Join("templates", templPath, "single.html")
-		}
-
-		err = GenerateHtmlFile(templateFullPath, filename, *outputRootPath)
+		destPath := filepath.Join(*outputRootPath, relPathDirs)
+		err = os.MkdirAll(destPath, os.ModePerm)
 		if err != nil {
 			panic(err)
+		}
+
+		outputFile, err := os.Create(filepath.Join(destPath, htmlFileName))
+		if err != nil {
+			panic(err)
+		}
+		defer outputFile.Close()
+
+		err = tmpl.ExecuteTemplate(outputFile, "base.gohtml", frontmatter)
+		if err != nil {
+			return
 		}
 	}
 
