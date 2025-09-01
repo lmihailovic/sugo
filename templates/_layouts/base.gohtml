@@ -5,7 +5,7 @@
 </head>
 <body>
     <header>
-        {{ template "header" }}
+        {{ block "header" . }} lorem ipsum. {{ end }}
     </header>
     <main>
         {{ block "main" . }} Lorem ipsum. {{ end }}
