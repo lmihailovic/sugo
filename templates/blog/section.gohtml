@@ -1,6 +1,4 @@
 {{ define "main" }}
-    BLOG SECTION
-        
     <h1>{{ .Title }}</h1>
     <h3> {{ .Description }} </h3>
 
@@ -9,6 +7,5 @@
         <li>{{ . }}</li>
     {{ end }}
     </ul>
-
     {{ .Content }}
 {{ end }}
