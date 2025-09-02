@@ -17,13 +17,6 @@ import (
 	"github.com/yuin/goldmark"
 )
 
-type ChildPage struct {
-	Link        string
-	Title       string
-	Description string
-	Weight      int
-}
-
 // GetFrontMatter extracts the json formatted front matter from a content file. Returns
 // the front matter of said file and the index at which Markdown content starts.
 func GetFrontMatter(filePath string, delimiter string) (map[string]any, int, error) {
