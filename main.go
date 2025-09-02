@@ -5,8 +5,10 @@ import (
 	"encoding/json"
 	"errors"
 	"flag"
+	"fmt"
 	"io/fs"
 	"log"
+	"net/http"
 	"os"
 	"path/filepath"
 	"strings"
@@ -102,16 +104,31 @@ func ListFiles(dir string) []string {
 
 // GetChildPages scans the specified content directory for markdown files and returns a map
 // of their HTML file names mapped to their titles.
-func GetChildPages(url string) map[string]any {
+func GetChildPages(url string, indexesOnly bool) map[string]any {
 	var pages = make(map[string]any)
 	root := filepath.Join("content", url)
+
+	fmt.Printf("\n\nroot: %v\n", root)
+
+	// todo: make this get the index of subdirs
 
 	err := filepath.WalkDir(root, func(path string, d fs.DirEntry, err error) error {
 		if filepath.Ext(path) == ".md" {
 			htmlFileName := strings.TrimSuffix(filepath.Base(path), filepath.Ext(path))
 			htmlFileName += ".html"
 
-			pages[htmlFileName], err = GetSpecificFrontMatter(path, "+++", "Title")
+			println(root + " " + htmlFileName)
+
+			if !indexesOnly && htmlFileName == "index.html" {
+				return nil
+			} else if indexesOnly && htmlFileName != "index.html" {
+				return nil
+			}
+
+			fullName := filepath.Join("/", url, htmlFileName)
+			//println(fullName)
+
+			pages[fullName], err = GetSpecificFrontMatter(path, "+++", "Title")
 			if err != nil {
 				log.Fatal(err)
 			}
@@ -140,8 +157,20 @@ func CopyStaticDir(src string, dst string) error {
 func main() {
 	sitePath := flag.String("i", ".", "path to website directory")
 	outputRootPath := flag.String("o", filepath.Join(*sitePath, "website"), "path for generated static web files")
+	devServer := flag.Bool("d", false, "run dev server")
 
 	flag.Parse()
+
+	if *devServer {
+		fileServer := http.FileServer(http.Dir("website"))
+		http.Handle("/", fileServer)
+
+		fmt.Printf("Starting server at http://localhost:8080/\n")
+
+		if err := http.ListenAndServe(":8080", nil); err != nil {
+			log.Fatal(err)
+		}
+	}
 
 	contentPath := filepath.Join(*sitePath, "content")
 	staticPath := filepath.Join(*sitePath, "static")
