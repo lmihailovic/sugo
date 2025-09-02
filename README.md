@@ -63,5 +63,7 @@ implemented by placing an `index.md` in `content/` root and a `section.html` in
 - [x] Add `static/` dir functionality for css, js and image files.
 - [x] Implement nested templates (for the document head, header, footer...)
 - [ ] Ability to set html title property
-- [ ] Add `.Path` property for pages to allow for nav element creations
-- [ ] Add ability to loop over pages in content sections inside of templates
+- [x] Add `.Path` property for pages to allow for nav element creations -
+realised via function
+- [x] Add ability to loop over pages in content sections inside of templates - 
+realised via function
