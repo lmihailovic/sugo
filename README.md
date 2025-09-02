@@ -33,9 +33,10 @@ template, and `example.com/blog/lorem.html` will use `single.html`.
 
 ## Arguments
 ```
- -i string
+-d      run dev server
+-i string
         path to website directory (default ".")
- -o string
+-o string
         path for generated static web files (default "website")
 ```
 
