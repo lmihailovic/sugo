@@ -44,7 +44,7 @@ template, and `example.com/blog/lorem.html` will use `single.html`.
 To create a navigational list of links for a specific page, you might use
 the following code
 ```
-{{ range $link, $title := GetChildPages "blog" -}}
+{{ range $link, $title := GetChildPages "blog" false -}}
     <a href="{{ $link }}"> {{ $title }} </a>
 {{ end }}
 ```
@@ -66,5 +66,8 @@ implemented by placing an `index.md` in `content/` root and a `section.html` in
 realised via function
 - [x] Add ability to loop over pages in content sections inside of templates - 
 realised via function
-- [ ] Ability to set html title property
 - [x] Function to loop pages over just one level of depth for a section
+- [ ] Ability to set global html title property
+- [ ] Command to generate an example website
+- [ ] Write tests
+- [ ] Get a chef gopher as mascot
