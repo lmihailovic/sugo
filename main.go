@@ -100,6 +100,30 @@ func ListFiles(dir string) []string {
 	return files
 }
 
+// GetChildPages scans the specified content directory for markdown files and returns a map
+// of their HTML file names mapped to their titles.
+func GetChildPages(url string) map[string]any {
+	var pages = make(map[string]any)
+	root := filepath.Join("content", url)
+
+	err := filepath.WalkDir(root, func(path string, d fs.DirEntry, err error) error {
+		if filepath.Ext(path) == ".md" {
+			htmlFileName := strings.TrimSuffix(filepath.Base(path), filepath.Ext(path))
+			htmlFileName += ".html"
+
+			pages[htmlFileName], err = GetSpecificFrontMatter(path, "+++", "Title")
+			if err != nil {
+				log.Fatal(err)
+			}
+		}
+		return nil
+	})
+	if err != nil {
+		log.Fatal(err)
+	}
+	return pages
+}
+
 // CopyStaticDir copies all files from the source directory to the destination directory.
 // src specifies the source directory containing the files to be copied.
 // dst specifies the destination directory where the files will be placed.
@@ -125,7 +149,6 @@ func main() {
 	files := ListFiles(contentPath)
 
 	for _, file := range files {
-		println(file)
 		relPath, err := filepath.Rel(contentPath, file)
 		if err != nil {
 			panic(err)
@@ -138,10 +161,11 @@ func main() {
 			templFile = "section.gohtml"
 		}
 
-		println("templPath: " + relPathDirs)
-		println("filename: " + templFile + "\n")
+		tmpl := template.New("").Funcs(template.FuncMap{
+			"GetChildPages": GetChildPages,
+		})
 
-		tmpl := template.Must(template.New("").ParseFiles(
+		tmpl = template.Must(tmpl.ParseFiles(
 			"templates/_layouts/base.gohtml",
 			"templates/_layouts/head.gohtml",
 			"templates/_layouts/header.gohtml",
@@ -174,7 +198,7 @@ func main() {
 		}
 		defer outputFile.Close()
 
-		err = tmpl.ExecuteTemplate(outputFile, "base.gohtml", frontmatter)
+		err = tmpl.ExecuteTemplate(outputFile, "base.gohtml", pageData)
 		if err != nil {
 			return
 		}
