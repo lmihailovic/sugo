@@ -1,5 +1,6 @@
 +++
-    "Title": "Test"
+    "Title": "Test",
+    "Description": "Mostly a testing blog, but demonstrates how images work!"
 +++
 Lorem, ipsum dolor sit amet consectetur adipisicing elit. Reiciendis odio eum suscipit nemo atque ducimus, ipsam delectus perferendis mollitia dolor asperiores a blanditiis excepturi repellendus dolorum sit assumenda sequi possimus.
 Unde illum vel magni in tempora facilis laboriosam est dolorum necessitatibus sapiente optio modi voluptas perspiciatis iusto, aliquid dignissimos iure tenetur? Libero obcaecati facilis expedita, commodi aut velit quia ducimus?

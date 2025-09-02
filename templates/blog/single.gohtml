@@ -1,5 +1,9 @@
 {{ define "main" }}
     <h1>{{- .Title -}}</h1>
-    <p>{{ .Description }} </p>
+
+    {{- if .Description}}
+        <p>{{ .Description }} </p>
+    {{- end }}
+
     {{ .Content }}
 {{ end }}
