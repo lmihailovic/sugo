@@ -1,7 +1,8 @@
 {{ define "main" }}
     <h1>{{ .Title }}</h1>
     <h3> {{ .Description }} </h3>
-    <a href="{{ .PageLink }}"> link to me :)</a>
+
+    <h4>Authors</h4>
     <ul>
         {{ range .Authors -}}
         <li>{{ . }}</li>
