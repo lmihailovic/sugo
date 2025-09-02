@@ -3,9 +3,17 @@
     <h3> {{ .Description }} </h3>
     <a href="{{ .PageLink }}"> link to me :)</a>
     <ul>
-    {{ range .Authors }}
+        {{ range .Authors -}}
         <li>{{ . }}</li>
-    {{ end }}
+        {{ end -}}
+    </ul>
+
+    <hr>
+
+    <ul>
+        {{ range $k, $v := GetChildPages "blog" -}}
+            <li> <a href="{{ $k }}"> {{ $v }} </a></li>
+        {{ end }}
     </ul>
     {{ .Content }}
 {{ end }}
