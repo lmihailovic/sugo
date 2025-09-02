@@ -17,6 +17,13 @@ import (
 	"github.com/yuin/goldmark"
 )
 
+type ChildPage struct {
+	Link        string
+	Title       string
+	Description string
+	Weight      int
+}
+
 // GetFrontMatter extracts the json formatted front matter from a content file. Returns
 // the front matter of said file and the index at which Markdown content starts.
 func GetFrontMatter(filePath string, delimiter string) (map[string]any, int, error) {
@@ -110,7 +117,6 @@ func GetChildPages(url string, indexesOnly bool) map[string]any {
 	rootDepth := strings.Count(root, string(os.PathSeparator))
 
 	err := filepath.WalkDir(root, func(path string, d fs.DirEntry, err error) error {
-		println("path: " + path)
 		if filepath.Ext(path) == ".md" {
 			htmlFilePath := strings.TrimSuffix(path, filepath.Ext(path))
 			htmlFilePath += ".html"
@@ -127,16 +133,19 @@ func GetChildPages(url string, indexesOnly bool) map[string]any {
 			}
 
 			relDepth := strings.Count(relPath, string(os.PathSeparator))
-			fmt.Printf("relative depth: %v\n", relDepth)
-			fmt.Printf("root depth: %v\n", rootDepth)
 
-			if (indexesOnly && relDepth-rootDepth == 0) || relDepth-rootDepth > 1 {
-				println("skipping dir...")
+			if d.IsDir() && (indexesOnly && relDepth-rootDepth == 0) || relDepth-rootDepth > 1 {
 				return filepath.SkipDir
 			}
 
+			if indexesOnly {
+				relDepth := strings.Count(relPath, string(os.PathSeparator))
+				if relDepth-rootDepth == 0 {
+					return nil
+				}
+			}
+
 			fullName := filepath.Join("/", relPath)
-			println("full name: " + fullName)
 
 			pages[fullName], err = GetSpecificFrontMatter(path, "+++", "Title")
 			if err != nil {
