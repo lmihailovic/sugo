@@ -162,7 +162,7 @@ func main() {
 	flag.Parse()
 
 	if *devServer {
-		fileServer := http.FileServer(http.Dir("website"))
+		fileServer := http.FileServer(http.Dir(*outputRootPath))
 		http.Handle("/", fileServer)
 
 		fmt.Printf("Starting server at http://localhost:8080/\n")
