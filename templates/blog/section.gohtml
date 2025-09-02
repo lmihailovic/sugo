@@ -10,6 +10,7 @@
 
     <hr>
 
+    <h3>Articles</h3>
     <ul>
         {{ range $link, $title := GetChildPages "blog" false -}}
             <li> <a href="{{ $link }}"> {{ $title }} </a></li>
