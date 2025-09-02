@@ -50,7 +50,6 @@ the following code
 ```
 This generates relative links for each `.html` file inside of `blog/`.
 
-
 ## To do
 - [x] Dynamic front matter entries (ditch the current temporary struct solution)
 - [x] Specify custom templates in front matter (so content's template doesn't
