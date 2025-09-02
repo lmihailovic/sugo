@@ -107,26 +107,36 @@ func ListFiles(dir string) []string {
 func GetChildPages(url string, indexesOnly bool) map[string]any {
 	var pages = make(map[string]any)
 	root := filepath.Join("content", url)
-
-	fmt.Printf("\n\nroot: %v\n", root)
-
-	// todo: make this get the index of subdirs
+	rootDepth := strings.Count(root, string(os.PathSeparator))
 
 	err := filepath.WalkDir(root, func(path string, d fs.DirEntry, err error) error {
+		println("path: " + path)
 		if filepath.Ext(path) == ".md" {
-			htmlFileName := strings.TrimSuffix(filepath.Base(path), filepath.Ext(path))
-			htmlFileName += ".html"
+			htmlFilePath := strings.TrimSuffix(path, filepath.Ext(path))
+			htmlFilePath += ".html"
 
-			println(root + " " + htmlFileName)
-
-			if !indexesOnly && htmlFileName == "index.html" {
+			if !indexesOnly && strings.Contains(htmlFilePath, "index.html") {
 				return nil
-			} else if indexesOnly && htmlFileName != "index.html" {
+			} else if indexesOnly && !strings.Contains(htmlFilePath, "index.html") {
 				return nil
 			}
 
-			fullName := filepath.Join("/", url, htmlFileName)
-			//println(fullName)
+			relPath, err := filepath.Rel("content", htmlFilePath)
+			if err != nil {
+				log.Fatal(err)
+			}
+
+			relDepth := strings.Count(relPath, string(os.PathSeparator))
+			fmt.Printf("relative depth: %v\n", relDepth)
+			fmt.Printf("root depth: %v\n", rootDepth)
+
+			if (indexesOnly && relDepth-rootDepth == 0) || relDepth-rootDepth > 1 {
+				println("skipping dir...")
+				return filepath.SkipDir
+			}
+
+			fullName := filepath.Join("/", relPath)
+			println("full name: " + fullName)
 
 			pages[fullName], err = GetSpecificFrontMatter(path, "+++", "Title")
 			if err != nil {
