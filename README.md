@@ -39,6 +39,17 @@ template, and `example.com/blog/lorem.html` will use `single.html`.
         path for generated static web files (default "website")
 ```
 
+## Getting started
+To create a navigational list of links for a specific page, you might use
+the following code
+```
+{{ range $link, $title := GetChildPages "blog" -}}
+    <a href="{{ $link }}"> {{ $title }} </a>
+{{ end }}
+```
+This generates relative links for each `.html` file inside of `blog/`.
+
+
 ## To do
 - [x] Dynamic front matter entries (ditch the current temporary struct solution)
 - [x] Specify custom templates in front matter (so content's template doesn't
