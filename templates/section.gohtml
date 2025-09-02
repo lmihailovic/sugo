@@ -1,5 +1,10 @@
 {{ define "main" }}
     <h1>{{- .Title -}}</h1>
     <h3>{{- .Description -}}</h3>
+
+    {{ range $link, $title := GetChildPages "" true -}}
+        <li> <a href="{{ $link }}"> {{ $title }} </a></li>
+    {{ end }}
+
     {{ .Content }}
 {{ end }}

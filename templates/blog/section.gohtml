@@ -11,8 +11,8 @@
     <hr>
 
     <ul>
-        {{ range $k, $v := GetChildPages "blog" -}}
-            <li> <a href="{{ $k }}"> {{ $v }} </a></li>
+        {{ range $link, $title := GetChildPages "blog" false -}}
+            <li> <a href="{{ $link }}"> {{ $title }} </a></li>
         {{ end }}
     </ul>
     {{ .Content }}
