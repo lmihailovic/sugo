@@ -67,7 +67,6 @@ realised via function
 - [x] Add ability to loop over pages in content sections inside of templates - 
 realised via function
 - [x] Function to loop pages over just one level of depth for a section
-- [ ] Ability to set global html title property
+- [ ] Pack all of page front matter in the value part of map in `GetChildPages`
 - [ ] Command to generate an example website
-- [ ] Write tests
-- [ ] Get a chef gopher as mascot
+- [ ] Get a chef gopher as a mascot
