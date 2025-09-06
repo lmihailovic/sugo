@@ -6,6 +6,7 @@ import (
 	"errors"
 	"flag"
 	"fmt"
+	"github.com/yuin/goldmark/extension"
 	"io/fs"
 	"log"
 	"net/http"
@@ -74,10 +75,12 @@ func GetTextContent(filePath string, offset int) (string, error) {
 		return "", err
 	}
 
-	fileContent := string(fileBytes)[offset:]
+	fileContent := fileBytes[offset:]
 	var buf bytes.Buffer
 
-	err = goldmark.Convert([]byte(fileContent), &buf)
+	mdParser := goldmark.New(goldmark.WithExtensions(extension.GFM))
+
+	err = mdParser.Convert(fileContent, &buf)
 	if err != nil {
 		return "", err
 	}
