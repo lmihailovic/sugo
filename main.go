@@ -107,8 +107,8 @@ func ListFiles(dir string) []string {
 
 // GetChildPages scans the specified content directory for markdown files and returns a map
 // of their HTML file names mapped to their titles.
-func GetChildPages(url string, indexesOnly bool) map[string]any {
-	var pages = make(map[string]any)
+func GetChildPages(url string, indexesOnly bool) map[string]map[string]any {
+	var pages = make(map[string]map[string]any)
 	root := filepath.Join("content", url)
 	rootDepth := strings.Count(root, string(os.PathSeparator))
 
@@ -141,12 +141,23 @@ func GetChildPages(url string, indexesOnly bool) map[string]any {
 				}
 			}
 
-			fullName := filepath.Join("/", relPath)
+			fullPath := filepath.Join("/", relPath)
 
-			pages[fullName], err = GetSpecificFrontMatter(path, "+++", "Title")
+			pageTitle, err := GetSpecificFrontMatter(path, "+++", "Title")
 			if err != nil {
 				log.Fatal(err)
 			}
+
+			pageDate, err := GetSpecificFrontMatter(path, "+++", "Date")
+			if err != nil {
+				log.Fatal(err)
+			}
+
+			pageData := make(map[string]any)
+			pageData["Title"] = pageTitle
+			pageData["Date"] = pageDate
+
+			pages[fullPath] = pageData
 		}
 		return nil
 	})

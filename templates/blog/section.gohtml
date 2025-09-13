@@ -13,8 +13,8 @@
 
     <h3>Articles</h3>
     <ul>
-        {{ range $link, $title := GetChildPages "blog" false -}}
-            <li> <a href="{{ $link }}"> {{ $title }} </a></li>
+        {{ range $link, $data := GetChildPages "blog" false -}}
+            <li> <a href="{{ $link }}"> [{{ $data.Date }}] {{ $data.Title }} </a></li>
         {{ end }}
     </ul>
     {{ .Content }}

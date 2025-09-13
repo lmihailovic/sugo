@@ -1,5 +1,5 @@
 +++
 "Title": "Template customisation",
 "Description": "Showcases how custom templates can be specified",
-"Template": "custom.gohtml"
+"Date": "14-9-2025"
 +++
