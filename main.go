@@ -143,19 +143,10 @@ func GetChildPages(url string, indexesOnly bool) map[string]map[string]any {
 
 			fullPath := filepath.Join("/", relPath)
 
-			pageTitle, err := GetSpecificFrontMatter(path, "+++", "Title")
+			pageData, _, err := GetFrontMatter(path, "+++")
 			if err != nil {
 				log.Fatal(err)
 			}
-
-			pageDate, err := GetSpecificFrontMatter(path, "+++", "Date")
-			if err != nil {
-				log.Fatal(err)
-			}
-
-			pageData := make(map[string]any)
-			pageData["Title"] = pageTitle
-			pageData["Date"] = pageDate
 
 			pages[fullPath] = pageData
 		}
