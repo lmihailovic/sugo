@@ -44,8 +44,8 @@ template, and `example.com/blog/lorem.html` will use `single.html`.
 To create a navigational list of links for a specific page, you might use
 the following code
 ```
-{{ range $link, $title := GetChildPages "blog" false -}}
-    <a href="{{ $link }}"> {{ $title }} </a>
+{{ range $link, $data := GetChildPages "blog" false }}
+    <a href="{{ $link }}"> {{ $data.Title }} </a>
 {{ end }}
 ```
 This generates relative links for each `.html` file inside of `blog/`.
