@@ -1,6 +1,6 @@
 +++
     "Title": "Dark mode difficulties",
-    "Date": "2024-5-24"
+    "Date": "24-5-2024"
 +++
 It's no secret, designing this website gave me many grievances
 (in the aesthetics department).
