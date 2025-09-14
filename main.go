@@ -12,8 +12,10 @@ import (
 	"net/http"
 	"os"
 	"path/filepath"
+	"sort"
 	"strings"
 	"text/template"
+	"time"
 
 	"github.com/yuin/goldmark"
 )
@@ -158,6 +160,51 @@ func GetChildPages(url string, indexesOnly bool) map[string]map[string]any {
 	return pages
 }
 
+// SortPages sorts a map of pages by the specified key in ascending or descending order, returning a slice of pages.
+func SortPages(pages map[string]map[string]any, sortKey string, desc bool) (sortedPages []map[string]any) {
+	out := make([]map[string]any, 0)
+	for link, data := range pages {
+		data["Link"] = link
+		out = append(out, data)
+	}
+
+	if sortKey == "Date" {
+		sort.Slice(out, func(i, j int) bool {
+			if desc {
+				t1, err := time.Parse("2-1-2006", out[i][sortKey].(string))
+				if err != nil {
+					log.Fatal(err)
+				}
+				t2, err := time.Parse("2-1-2006", out[j][sortKey].(string))
+				if err != nil {
+					log.Fatal(err)
+				}
+				return t1.After(t2)
+			}
+			t1, err := time.Parse("2-1-2006", out[i][sortKey].(string))
+			if err != nil {
+				log.Fatal(err)
+			}
+			t2, err := time.Parse("2-1-2006", out[j][sortKey].(string))
+			if err != nil {
+				log.Fatal(err)
+			}
+			return t1.Before(t2)
+		})
+
+		return out
+	}
+
+	sort.Slice(out, func(i, j int) bool {
+		if desc {
+			return out[i][sortKey].(string) > out[j][sortKey].(string)
+		}
+		return out[i][sortKey].(string) < out[j][sortKey].(string)
+	})
+
+	return out
+}
+
 // CopyStaticDir copies all files from the source directory to the destination directory.
 // src specifies the source directory containing the files to be copied.
 // dst specifies the destination directory where the files will be placed.
@@ -209,6 +256,7 @@ func main() {
 
 		tmpl := template.New("").Funcs(template.FuncMap{
 			"GetChildPages": GetChildPages,
+			"SortPages":     SortPages,
 		})
 
 		tmpl = template.Must(tmpl.ParseFiles(
