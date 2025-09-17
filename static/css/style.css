@@ -2,6 +2,9 @@ body
 {
     max-width: 640px;
     margin: 0 auto;
+
+    background-color: #253443;
+    color: #fff;
 }
 
 p
@@ -12,4 +15,9 @@ p
 footer
 {
     text-align: center;
+}
+
+a
+{
+    color: #fff;
 }
