@@ -6,7 +6,6 @@ import (
 	"errors"
 	"flag"
 	"fmt"
-	"github.com/yuin/goldmark/extension"
 	"io/fs"
 	"log"
 	"net/http"
@@ -16,6 +15,8 @@ import (
 	"strings"
 	"text/template"
 	"time"
+
+	"github.com/yuin/goldmark/extension"
 
 	"github.com/yuin/goldmark"
 )
