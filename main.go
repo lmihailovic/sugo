@@ -52,10 +52,6 @@ func GetFrontMatter(filePath string, delimiter string) (map[string]any, int, err
 		return nil, endIndex + len(delimiter), err
 	}
 
-	// for k, v := range data {
-	// 	fmt.Printf("\nk: %v\tv: %v\n", k, v)
-	// }
-
 	return data, endIndex + len(delimiter), nil
 }
 
