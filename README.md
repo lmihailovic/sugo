@@ -69,4 +69,5 @@ realised via function
 - [x] Function to loop pages over just one level of depth for a section
 - [x] Pack all of page front matter in the value part of map in `GetChildPages`
 - [ ] Command to generate an example website
+- [ ] Make a live server functionality, for live previews. Possibly replace the existing `-d` functionality with this one.
 - [ ] Get a chef gopher as a mascot
