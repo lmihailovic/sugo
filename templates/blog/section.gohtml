@@ -2,7 +2,7 @@
     <h1>{{ .Title }}</h1>
     {{ .Content }}
     <ul>
-        {{ $sorted := SortPages (GetChildPages "blog" false) "Date" true }}
+        {{ $sorted := SortPages (GetChildPages "blog" false) "Date" false }}
         {{ range $p := $sorted }}
             <li> [{{ $p.Date }}] <a href="{{ $p.Link }}">{{ $p.Title }}</a></li>
         {{ end }}
