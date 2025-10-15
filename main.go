@@ -138,6 +138,7 @@ func GetChildPages(url string, indexesOnly bool) map[string]map[string]any {
 				if relDepth-rootDepth == 0 {
 					return nil
 				}
+				relPath = filepath.Dir(relPath)
 			}
 
 			fullPath := filepath.Join("/", relPath)
