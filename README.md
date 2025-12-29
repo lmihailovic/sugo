@@ -12,7 +12,8 @@ make it a thesis project and be made open-source and available to the public.
 
 ## Installation
 
-Download the binary from the **Releases** page, if there is one.  
+Download the binary from the
+[Releases](https://github.com/lmihailovic/sugo/releases) page, if there is one.  
 If there is no binary, you must compile from source.
 
 ### Compiling from source
