@@ -47,7 +47,37 @@ The root directory can be explicitly set using the `-i` flag, see
 After running sugo, a new directory, `website/`, is created by default inside
 of the root directory you created yourself. 
 
-## How it works
+### Writing content files
+
+The content files use markdown as their file format.
+
+Front matter is written at the very top of the file, and is delimited by "+++".
+
+Front matter format is **JSON**. Sugo will refuse to build the website if any
+page has badly formatted JSON.
+
+Example content file:
+```
++++
+"Title": "Content file formatting",
+"Description": "Showcases how what can be done in a content file",
+"Date": "14-9-2025"
++++
+This here text represents the content itself. Everything above this is
+front matter.
+
+# What can I use here?
+
+Here I can use regular *markdown*, and **all** of it's standard features:
+- bullet lists
+- emphasising
+- defining titles
+- hyperlinks
+
+I was extra nice, so I even allowed for tables :)
+Big thanks to the [goldmark](https://github.com/yuin/goldmark) library for
+markdown parsing!
+```
 
 ### Templating of content files
 
