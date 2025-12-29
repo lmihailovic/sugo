@@ -10,6 +10,19 @@ a _plug-and-play_ experience.
 It was initially imagined as a personal tool, but later it was decided to
 make it a thesis project and be made open-source and available to the public.
 
+## Installation
+
+Download the binary from the **Releases**page, if there is one. If there is no
+binary, you must compile from source.
+
+### Compiling from source
+
+```
+git clone https://github.com/lmihailovic/sugo
+cd sugo
+go build
+```
+
 ## Arguments
 
 ```
@@ -19,6 +32,19 @@ make it a thesis project and be made open-source and available to the public.
 -o string
         path for generated static web files (default "website")
 ```
+
+## Getting started
+
+Create a root directory where you wish to contain the resources for your website.  
+This directory further needs `content/` and `templates/` directories, with
+`static/` as an optional one, should you need it. See the
+[section on static files](#static-files) for its use cases.
+
+The root directory can be explicitly set using the `-i` flag, see
+[the arguments section](#arguments) for other flags.
+
+After running sugo, a new directory, `website/`, is created by default inside
+of the root directory you created yourself. 
 
 ## How it works
 
