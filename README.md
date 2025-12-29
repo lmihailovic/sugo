@@ -53,8 +53,11 @@ The content files use markdown as their file format.
 
 Front matter is written at the very top of the file, and is delimited by "+++".
 
-Front matter format is **JSON**. Sugo will refuse to build the website if any
-page has badly formatted JSON.
+> [!IMPORTANT]
+> Front matter format is JSON. 
+
+> [!CAUTION]
+> Sugo will refuse to build the website if any page has badly formatted JSON.
 
 Example content file:
 ```
