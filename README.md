@@ -10,6 +10,16 @@ a _plug-and-play_ experience.
 It was initially imagined as a personal tool, but later it was decided to
 make it a thesis project and be made open-source and available to the public.
 
+## Arguments
+
+```
+-d      run dev server
+-i string
+        path to website directory (default ".")
+-o string
+        path for generated static web files (default "website")
+```
+
 ## How it works
 
 ### Templating of content files
@@ -61,16 +71,6 @@ Some files just need to be copied over, without changing
 (images, styles, fonts...). For that need, just place them in the `static/`
 directory, and they will be copied over to the generated website, nothing
 changed.
-
-## Arguments
-
-```
--d      run dev server
--i string
-        path to website directory (default ".")
--o string
-        path for generated static web files (default "website")
-```
 
 ## Quick tips
 
