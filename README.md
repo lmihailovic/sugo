@@ -74,6 +74,8 @@ changed.
 
 ## Quick tips
 
+### Navigation links menu
+
 To create a navigational list of links for a specific page, you might use
 the following code
 ```
