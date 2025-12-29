@@ -52,7 +52,7 @@ templates
     ├── single.gohtml
     └── films
         ├── section.gohtml
-	└── single.gohtml 
+        └── single.gohtml 
 ```
 
 ### Static files
