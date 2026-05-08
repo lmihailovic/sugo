@@ -43,7 +43,7 @@ func GetFrontMatter(filePath string, delimiter string) (map[string]any, int, err
 	frontMatter := "{" + fileContent[startIndex:endIndex] + "}\n"
 
 	if !json.Valid([]byte(frontMatter)) {
-		return nil, -1, errors.New("invalid json in front matter: " + frontMatter)
+		return nil, -1, errors.New("invalid json in " + filePath + " front matter: " + frontMatter)
 	}
 
 	data := make(map[string]any, 0)
