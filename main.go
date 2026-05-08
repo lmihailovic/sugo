@@ -168,12 +168,12 @@ func SortPages(pages map[string]map[string]any, sortKey string, desc bool) (sort
 
 	if sortKey == "Date" {
 		sort.Slice(out, func(i, j int) bool {
-			t1, err := time.Parse("2-1-2006", out[i][sortKey].(string))
+			t1, err := time.Parse("2006-1-2", out[i][sortKey].(string))
 			if err != nil {
 				log.Fatal(err)
 			}
 
-			t2, err := time.Parse("2-1-2006", out[j][sortKey].(string))
+			t2, err := time.Parse("2006-1-2", out[j][sortKey].(string))
 			if err != nil {
 				log.Fatal(err)
 			}
