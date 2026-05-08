@@ -150,3 +150,4 @@ This generates relative links for each `.html` file inside of `blog/`.
 - [ ] Command to generate an example website
 - [ ] Make a live server functionality for live previews. Possibly replace the existing `-d` functionality with this one.
 - [ ] Get a chef gopher as a mascot
+- [ ] Function for date localisation inside of templates
