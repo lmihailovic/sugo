@@ -1,6 +1,6 @@
 +++
     "Title": "Dark mode difficulties",
-    "Date": "24-5-2024",
+    "Date": "2024-5-24",
     "Description": "How preventing eye sores became a headache"
 +++
 It's no secret, designing this website gave me many grievances
