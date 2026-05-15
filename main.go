@@ -204,7 +204,12 @@ func SortPages(pages map[string]map[string]any, sortKey string, desc bool) (sort
 func CopyStaticDir(src string, dst string) error {
 	destFS := os.DirFS(src)
 
-	err := os.CopyFS(dst, destFS)
+	err := os.RemoveAll(dst)
+	if err != nil {
+		return err
+	}
+
+	err = os.CopyFS(dst, destFS)
 	if err != nil {
 		return err
 	}
@@ -231,6 +236,11 @@ func main() {
 
 	contentPath := filepath.Join(*sitePath, "content")
 	staticPath := filepath.Join(*sitePath, "static")
+
+	err := CopyStaticDir(staticPath, *outputRootPath)
+	if err != nil {
+		panic(err)
+	}
 
 	files := ListFiles(contentPath)
 
@@ -289,11 +299,6 @@ func main() {
 		if err != nil {
 			return
 		}
-	}
-
-	err := CopyStaticDir(staticPath, *outputRootPath)
-	if err != nil {
-		panic(err)
 	}
 
 }
