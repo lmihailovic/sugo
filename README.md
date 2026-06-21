@@ -19,8 +19,8 @@ If there is no binary, you must compile from source.
 ### Compiling from source
 
 ```sh
-git clone https://github.com/lmihailovic/sugo
-cd sugo
+git clone https://github.com/lmihailovic/sugo &&
+cd sugo &&
 go build
 ```
 
@@ -60,6 +60,7 @@ Front matter is written at the very top of the file, and is delimited by "+++".
 > Sugo will refuse to build the website if any page has badly formatted JSON.
 
 Example content file:
+
 ```md
 +++
 "Title": "Content file formatting",
@@ -100,6 +101,7 @@ This means that the file `content/blog/lorem.md` will need a
 
 Here is an example of a typical `content/` directory, and the accompanying
 `templates/` directory:
+
 ```
 content
 ├── blog
@@ -137,12 +139,14 @@ changed.
 ### Navigation links menu
 
 To create a navigational list of links for a specific page, you might use
-the following code
+the following code:
+
 ```gohtml
 {{ range $link, $data := GetChildPages "blog" false }}
     <a href="{{ $link }}"> {{ $data.Title }} </a>
 {{ end }}
 ```
+
 This generates relative links for each `.html` file inside of `blog/`.
 
 ## To do
