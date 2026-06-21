@@ -4,7 +4,7 @@ A minimal and dead-simple static site generator.
 
 ## Overview
 
-Sugo is a static site generator written in Go, designed to be simple and offer
+`sugo` is a static site generator written in Go, designed to be simple and offer
 a _plug-and-play_ experience. 
 
 It was initially imagined as a personal tool, but later it was decided to
@@ -18,7 +18,7 @@ If there is no binary, you must compile from source.
 
 ### Compiling from source
 
-```
+```sh
 git clone https://github.com/lmihailovic/sugo
 cd sugo
 go build
@@ -60,7 +60,7 @@ Front matter is written at the very top of the file, and is delimited by "+++".
 > Sugo will refuse to build the website if any page has badly formatted JSON.
 
 Example content file:
-```
+```md
 +++
 "Title": "Content file formatting",
 "Description": "Showcases how what can be done in a content file",
@@ -138,7 +138,7 @@ changed.
 
 To create a navigational list of links for a specific page, you might use
 the following code
-```
+```gohtml
 {{ range $link, $data := GetChildPages "blog" false }}
     <a href="{{ $link }}"> {{ $data.Title }} </a>
 {{ end }}
